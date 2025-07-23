@@ -1,4 +1,3 @@
-
 name: Build FaceApp Android APK
 
 on:
@@ -15,9 +14,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Clean build cache
         run: |
+          # Remove buildozer's internal cache and the output 'bin' directory
+          # Buildozer usually places APKs in 'bin/' at the root when run from root.
           rm -rf .buildozer
-          rm -rf app/bin
+          rm -rf bin # Corrected path for cleaning the output directory
       - name: Build APK
+        # This action runs buildozer. The 'workdir: .' means buildozer runs
+        # in the root of your repository, so the APK will be in 'bin/'.
         uses: ArtemSBulgakov/buildozer-action@v1
         with:
           command: buildozer android debug
@@ -27,4 +30,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: faceapp-integrated-apk
-          path: app/bin/*.apk
+          # Corrected path: APKs are typically generated in the 'bin/' directory
+          # at the root level wh
